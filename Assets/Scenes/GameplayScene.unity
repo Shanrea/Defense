@@ -3029,28 +3029,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 365756183}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1963608113 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6754791487567947154, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-  m_PrefabInstance: {fileID: 6108210569543258373}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1963608121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1963608113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b377b810c67fe48469b7751334284acb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _maxHealth: 100
-  _health: 100
-  _isAlive: 1
-  isInvincible: 0
-  invincibilityTime: 0.25
 --- !u!1001 &6108210569543258373
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3111,6 +3089,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8252365625453156758, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
+      propertyPath: isInvincible
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8252365625453156758, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
+      propertyPath: invincibilityTime
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 9204036413314188768, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
       propertyPath: castFilter.layerMask.m_Bits
       value: 68
@@ -3119,10 +3105,7 @@ PrefabInstance:
     - {fileID: 4119128633144519945, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6754791487567947154, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1963608121}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

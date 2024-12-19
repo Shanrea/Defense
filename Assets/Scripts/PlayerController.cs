@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
+[RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
 public class PlayerController : MonoBehaviour
 {
     public float walkspeed = 5f;
@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float airWalkSpeed = 3f;
     Vector2 moveInput;
     TouchingDirections touchingDirections;
+    Damageable damageable;
 
     public float CurrentMoveSpeed
     {
@@ -103,23 +104,14 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        damageable = GetComponent<Damageable>();
     }
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
+        if (!damageable.LockVelocity)
+            rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
+
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
 
@@ -180,19 +172,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnDeath()
+    public void OnHit(int damage, Vector2 knockback)
     {
-        //if (m_isAlive)
-        //{
-        //   m_isAlive = false;
-        // CameraShake.Instance.StartShaking(2.5f, Vector2.up * 0.6f);
-        //CameraShake.Instance.FreezeTime(0.1f, 0.05f);
-        //if (m_deathVFX)
-        //{
-        //  m_deathVFX.transform.parent = null;
-        //m_deathVFX.Play();
-        //}
-        //Destroy(gameObject);
-        //}
+        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
     }
 }
