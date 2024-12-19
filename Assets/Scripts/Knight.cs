@@ -66,6 +66,18 @@ public class Knight : MonoBehaviour
         }
     }
 
+    public float AttackCooldown
+    {
+        get
+        {
+            return animator.GetFloat(AnimationStrings.attackCooldown);
+        }
+        private set
+        {
+            animator.SetFloat(AnimationStrings.attackCooldown, Mathf.Max(value, 0));
+        }
+    }
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -80,6 +92,10 @@ public class Knight : MonoBehaviour
     void Update()
     {
         HasTarget = attackZone.detectedColliders.Count > 0;
+        if (AttackCooldown > 0)
+        {
+            AttackCooldown -= Time.deltaTime;
+        }
     }
 
     private void FixedUpdate()
