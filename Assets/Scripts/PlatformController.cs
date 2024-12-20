@@ -27,18 +27,21 @@ public class PlatformController : MonoBehaviour
         baseHeight = transform.position.y; // Initialise baseHeight à la position initiale de la plateforme
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         float totalWeight = GetTotalWeight();
 
-        float targetYPos = baseHeight - totalWeight * weightFactor;
+        float targetYPos = baseHeight - (totalWeight * weightFactor);
 
         // Clamp la position pour s'assurer qu'elle reste dans les limites spécifiées
         targetYPos = Mathf.Clamp(targetYPos, m_minYPos, m_maxYPos);
 
         // Interpoler en douceur vers la nouvelle position, augmenter le facteur pour une remontée plus rapide
-        float newYPos = Mathf.Lerp(transform.position.y, targetYPos, 0.5f * Time.fixedDeltaTime);
-        rb.MovePosition(new Vector2(transform.position.x, newYPos));
+        //float newYPos = Mathf.Lerp(transform.position.y, targetYPos, 0.5f * Time.deltaTime);
+        float newYPos = Mathf.MoveTowards(transform.position.y, targetYPos, 0.5f * Time.deltaTime);
+        //rb.MovePosition(new Vector2(transform.position.x, newYPos));
+
+        transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, targetYPos, transform.position.z), 0.5f * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
