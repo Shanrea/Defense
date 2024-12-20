@@ -4,10 +4,12 @@ public class DestructionZone : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         Knight knight = collision.gameObject.GetComponentInParent<Knight>();
         if (knight != null)
         {
             Destroy(knight.gameObject);
+
             Debug.Log("Knight Destroyed");
         }
     }

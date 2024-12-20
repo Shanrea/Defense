@@ -8,6 +8,7 @@ public class Damageable : MonoBehaviour
 
     [SerializeField]
     private int _maxHealth = 100;
+    public float delay = 2.0f;
 
     public int MaxHealth
     {
@@ -36,6 +37,8 @@ public class Damageable : MonoBehaviour
             if(_health <= 0)
             {
                 IsAlive = false;
+                Destroy(gameObject, delay);
+                
             }
         }
     }
@@ -101,6 +104,8 @@ public class Damageable : MonoBehaviour
             animator.SetTrigger(AnimationStrings.hitTrigger);
             LockVelocity = true;
             damageableHit?.Invoke(damage, knockback);
+            CharacterEvents.characterDamaged.Invoke(gameObject, damage);
+
             return true;
         }
         return false;

@@ -6,7 +6,7 @@ public class PlatformController : MonoBehaviour
 {
     [SerializeField] private float m_minYPos = -20;
     [SerializeField] private float weightFactor = 0.1f; // Facteur pour déterminer combien la plateforme descend par unité de poids
-    [SerializeField] private float m_upSpeed = 5; // Vitesse de remontée lorsque la plateforme n'est pas chargée
+    //[SerializeField] private float m_upSpeed = 5; // Vitesse de remontée lorsque la plateforme n'est pas chargée
 
     private float m_maxYPos = 0;
     private float baseHeight;
