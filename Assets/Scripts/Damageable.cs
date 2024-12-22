@@ -21,6 +21,7 @@ public class Damageable : MonoBehaviour
             _maxHealth = value;
         }
     }
+
     [SerializeField]
     private int _health = 100;
 
@@ -34,18 +35,19 @@ public class Damageable : MonoBehaviour
         {
             _health = value;
 
-            if(_health <= 0)
+            if (_health <= 0)
             {
                 IsAlive = false;
-                Destroy(gameObject, delay);
-                
+                OnDeath();
             }
         }
     }
 
-    [SerializeField]private bool _isAlive = true;
+    [SerializeField]
+    private bool _isAlive = true;
 
-    [SerializeField] private bool isInvincible = false;
+    [SerializeField]
+    private bool isInvincible = false;
 
     private float timeSinceHit = 0;
     public float invincibilityTime = 0.25f;
@@ -59,7 +61,7 @@ public class Damageable : MonoBehaviour
         set
         {
             _isAlive = value;
-            animator.SetBool(AnimationStrings.isAlive, value); 
+            animator.SetBool(AnimationStrings.isAlive, value);
             Debug.Log("IsAlive set " + value);
         }
     }
@@ -83,20 +85,21 @@ public class Damageable : MonoBehaviour
 
     private void Update()
     {
-        if (isInvincible) {
+        if (isInvincible)
+        {
             if (timeSinceHit > invincibilityTime)
             {
                 isInvincible = false;
                 timeSinceHit = 0;
             }
 
-            timeSinceHit += Time.deltaTime; 
+            timeSinceHit += Time.deltaTime;
         }
     }
 
     public bool Hit(int damage, Vector2 knockback)
     {
-        if(IsAlive && !isInvincible)
+        if (IsAlive && !isInvincible)
         {
             Health -= damage;
             isInvincible = true;
@@ -109,5 +112,18 @@ public class Damageable : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void OnDeath()
+    {
+        PlayerController player = GetComponent<PlayerController>();
+        if (player != null)
+        {
+            player.OnDeath();
+        }
+        else
+        {
+            Destroy(gameObject, delay);
+        }
     }
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlatformController : MonoBehaviour
 {
     [SerializeField] private float m_minYPos = -20;
-    [SerializeField] private float weightFactor = 0.1f; // Facteur pour déterminer combien la plateforme descend par unité de poids
-    //[SerializeField] private float m_upSpeed = 5; // Vitesse de remontée lorsque la plateforme n'est pas chargée
+    [SerializeField] private float weightFactor = 0.01f; // Facteur pour déterminer combien la plateforme descend par unité de poids
+    [SerializeField] private float lerpSpeed = 0.05f; // Vitesse d'interpolation pour une descente plus douce
+    [SerializeField] private float upSpeed = 0.1f; // Vitesse de remontée de la plateforme
 
     private float m_maxYPos = 0;
     private float baseHeight;
@@ -30,18 +31,24 @@ public class PlatformController : MonoBehaviour
     private void Update()
     {
         float totalWeight = GetTotalWeight();
+        Debug.Log($"Total Weight: {totalWeight}");
 
-        float targetYPos = baseHeight - (totalWeight * weightFactor);
+        float targetYPos;
+        if (totalWeight > 0)
+        {
+            targetYPos = baseHeight - (totalWeight * weightFactor);
+        }
+        else
+        {
+            targetYPos = m_maxYPos; // Remonte à la position initiale si aucun ennemi n'est présent
+        }
 
         // Clamp la position pour s'assurer qu'elle reste dans les limites spécifiées
         targetYPos = Mathf.Clamp(targetYPos, m_minYPos, m_maxYPos);
 
-        // Interpoler en douceur vers la nouvelle position, augmenter le facteur pour une remontée plus rapide
-        //float newYPos = Mathf.Lerp(transform.position.y, targetYPos, 0.5f * Time.deltaTime);
-        float newYPos = Mathf.MoveTowards(transform.position.y, targetYPos, 0.5f * Time.deltaTime);
-        //rb.MovePosition(new Vector2(transform.position.x, newYPos));
-
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, targetYPos, transform.position.z), 0.5f * Time.deltaTime);
+        // Interpoler en douceur vers la nouvelle position
+        float newYPos = Mathf.Lerp(transform.position.y, targetYPos, totalWeight > 0 ? lerpSpeed * Time.deltaTime : upSpeed * Time.deltaTime);
+        rb.MovePosition(new Vector2(transform.position.x, newYPos));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -52,14 +59,9 @@ public class PlatformController : MonoBehaviour
         }
 
         Knight knight = collision.gameObject.GetComponentInParent<Knight>();
-        if (knight != null)
+        if (knight != null && !m_currentEnemiesInContact.Contains(knight))
         {
             AddEnemyInContact(knight);
-
-        }
-        else
-        {
-
         }
     }
 
@@ -71,41 +73,22 @@ public class PlatformController : MonoBehaviour
         }
 
         Knight knight = collision.gameObject.GetComponentInParent<Knight>();
-        if (knight != null)
+        if (knight != null && m_currentEnemiesInContact.Contains(knight))
         {
             RemoveEnemyInContact(knight);
-
-        }
-        else
-        {
-
         }
     }
 
     private void AddEnemyInContact(Knight knight)
     {
-        if (!m_currentEnemiesInContact.Contains(knight))
-        {
-            m_currentEnemiesInContact.Add(knight);
-            Debug.Log($"Knight added to list: {knight.Weight}");
-        }
-        else
-        {
-            Debug.Log("Knight already in the list.");
-        }
+        m_currentEnemiesInContact.Add(knight);
+        Debug.Log($"Knight added to list: {knight.Weight}");
     }
 
     private void RemoveEnemyInContact(Knight knight)
     {
-        if (m_currentEnemiesInContact.Contains(knight))
-        {
-            m_currentEnemiesInContact.Remove(knight);
-            Debug.Log($"Knight removed from list: {knight.Weight}");
-        }
-        else
-        {
-            Debug.Log("Knight not found in the list.");
-        }
+        m_currentEnemiesInContact.Remove(knight);
+        Debug.Log($"Knight removed from list: {knight.Weight}");
     }
 
     private float GetTotalWeight()
@@ -114,7 +97,15 @@ public class PlatformController : MonoBehaviour
         foreach (Knight knight in m_currentEnemiesInContact)
         {
             totalWeight += knight.Weight;
+            Debug.Log($"Knight Weight: {knight.Weight}");
         }
+        Debug.Log($"Computed Total Weight: {totalWeight}");
         return totalWeight;
+    }
+
+    private void LateUpdate()
+    {
+        // Met à jour la liste des ennemis présents à la fin de chaque frame pour une meilleure détection
+        m_currentEnemiesInContact.RemoveAll(knight => knight == null);
     }
 }

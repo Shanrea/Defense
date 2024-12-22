@@ -563,7 +563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_enemyPrefab: {fileID: 1481515162646296283, guid: 7fe087d09ef31134a9b0f519edd13216, type: 3}
-  m_spawnRate: {x: 1, y: 3}
+  m_spawnRate: {x: 5, y: 8}
   m_spawnArea: {fileID: 1849663165}
   m_spawnRateMultiplier:
     serializedVersion: 2
@@ -6022,6 +6022,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1481515162646296283, guid: 7fe087d09ef31134a9b0f519edd13216, type: 3}
+      propertyPath: walkAcceleration
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 2488187324005940463, guid: 7fe087d09ef31134a9b0f519edd13216, type: 3}
       propertyPath: m_Interpolate
       value: 0
@@ -6230,7 +6234,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1331868989}
-  m_BodyType: 1
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -6263,6 +6267,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_minYPos: -20
   weightFactor: 0.1
+  lerpSpeed: 0.05
+  upSpeed: 3
 --- !u!61 &1331868992
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8427,18 +8433,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 339700528466744155, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 3300105505419411752, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: m_Interpolate
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4092923854562980721, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4444341134859872190, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.33
@@ -8483,24 +8477,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 7411154061283495713, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7411154061283495713, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8252365625453156758, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: isInvincible
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9204036413314188768, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
-      propertyPath: castFilter.layerMask.m_Bits
-      value: 68
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4119128633144519945, guid: ad9c2540c5f277644a6e40a77369e773, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

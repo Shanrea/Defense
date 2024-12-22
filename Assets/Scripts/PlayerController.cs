@@ -1,14 +1,16 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections), typeof(Damageable))]
 public class PlayerController : MonoBehaviour
 {
     public float walkspeed = 5f;
     public float runspeed = 8f;
-    public float jumpImpulse = 6f;
+    public float jumpImpulse = 8f;
     public float airWalkSpeed = 3f;
+    public float fallMultiplier = 2.5f;
+
     Vector2 moveInput;
     TouchingDirections touchingDirections;
     Damageable damageable;
@@ -94,10 +96,15 @@ public class PlayerController : MonoBehaviour
         {
             return animator.GetBool(AnimationStrings.isAlive);
         }
+        private set
+        {
+            animator.SetBool(AnimationStrings.isAlive, value);
+        }
     }
 
     Rigidbody2D rb;
     Animator animator;
+    Collider2D coll;
 
     private void Awake()
     {
@@ -105,14 +112,36 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
         damageable = GetComponent<Damageable>();
+        coll = GetComponent<Collider2D>();
     }
 
     private void FixedUpdate()
     {
-        if (!damageable.LockVelocity)
+        if (!damageable.LockVelocity && IsAlive)
             rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y);
 
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+
+        if (IsAlive)
+        {
+            if (rb.velocity.y < 0)
+            {
+                rb.gravityScale = fallMultiplier;
+            }
+            else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
+            {
+                rb.gravityScale = fallMultiplier / 2f;
+            }
+            else
+            {
+                rb.gravityScale = 1f;
+            }
+        }
+        else
+        {
+            rb.gravityScale = 1f;
+            rb.velocity = Vector2.zero; // Arrête le mouvement du joueur
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -128,7 +157,6 @@ public class PlayerController : MonoBehaviour
         {
             IsMoving = false;
         }
-
     }
 
     private void SetFacingDirection(Vector2 moveInput)
@@ -175,5 +203,27 @@ public class PlayerController : MonoBehaviour
     public void OnHit(int damage, Vector2 knockback)
     {
         rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
+
+        if (!IsAlive)
+        {
+            OnDeath();
+        }
+    }
+
+    public void OnDeath()
+    {
+        IsAlive = false;
+        animator.SetTrigger("Death");
+        coll.enabled = true; // Garde le collider activé pour empêcher le joueur de passer à travers la plateforme
+
+        // Arrête le jeu après un délai pour permettre à l'animation de mort de jouer
+        StartCoroutine(StopGameAfterDelay());
+    }
+
+    private IEnumerator StopGameAfterDelay()
+    {
+        // Attends la fin de l'animation de mort plus une seconde supplémentaire
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length + 1.0f);
+        Time.timeScale = 0;
     }
 }

@@ -5,7 +5,8 @@ using UnityEngine;
 public class Knight : MonoBehaviour
 {
     private float m_weight = 5;
-    public float walkspeed = 3f;
+    public float walkAcceleration = 3f;
+    public float maxSpeed = 3f;
     public float walkStopRate = 0.05f;
     public DetectionZone attackZone;
 
@@ -107,7 +108,7 @@ public class Knight : MonoBehaviour
         if (!damageable.LockVelocity)
         {
             if (CanMove)
-                rb.velocity = new Vector2(walkspeed * walkDirectionVector.x, rb.velocity.y);
+                rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x + (walkAcceleration * walkDirectionVector.x * Time.fixedDeltaTime), -maxSpeed, maxSpeed), rb.velocity.y) ;
             else
                 rb.velocity = new Vector2(Mathf.Lerp(rb.velocity.x, 0, walkStopRate), rb.velocity.y);
         }

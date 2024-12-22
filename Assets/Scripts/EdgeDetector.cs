@@ -8,7 +8,6 @@ public class EdgeDetector : MonoBehaviour
         if (knight != null)
         {
             knight.FlipDirection();
-            Debug.Log("Dance !");
         }
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
